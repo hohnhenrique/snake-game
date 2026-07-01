@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snake // cobra de terminal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="scanlines"></div>
+
+  <main class="console">
+    <header class="console__header">
+      <div class="console__title">
+        <span class="console__bracket">[</span>
+        SNAKE
+        <span class="console__bracket">]</span>
+      </div>
+      <p class="console__subtitle">cobra de terminal // v1.0</p>
+      <div class="console__actions">
+        <button class="action-btn" id="manual-btn" type="button">
+          <span class="action-btn__icon">?</span> manual
+        </button>
+      </div>
+    </header>
+
+    <section class="hud" aria-label="painel de status">
+      <div class="hud__stat">
+        <span class="hud__label">pontos</span>
+        <span class="hud__value" id="score">000</span>
+      </div>
+
+      <button class="hud__face" id="pause-btn" aria-label="pausar / retomar" title="pausar / retomar">
+        <span id="face-icon">▶</span>
+      </button>
+
+      <div class="hud__stat">
+        <span class="hud__label">recorde</span>
+        <span class="hud__value" id="high-score">000</span>
+      </div>
+    </section>
+
+    <section class="speed" aria-label="velocidade">
+      <button class="speed__btn is-active" data-speed="slow">lenta</button>
+      <button class="speed__btn" data-speed="normal">normal</button>
+      <button class="speed__btn" data-speed="fast">rápida</button>
+    </section>
+
+    <section class="board-wrapper">
+      <canvas id="board" width="360" height="360" aria-label="tabuleiro do jogo snake"></canvas>
+    </section>
+
+    <p class="status-line" id="status-line">use as setas ou WASD para mover &middot; espaço para pausar</p>
+
+    <div class="dpad" aria-hidden="true">
+      <button class="dpad__btn dpad__btn--up" id="dpad-up" aria-label="mover para cima">▲</button>
+      <button class="dpad__btn dpad__btn--left" id="dpad-left" aria-label="mover para esquerda">◀</button>
+      <button class="dpad__btn dpad__btn--down" id="dpad-down" aria-label="mover para baixo">▼</button>
+      <button class="dpad__btn dpad__btn--right" id="dpad-right" aria-label="mover para direita">▶</button>
+    </div>
+
+    <footer class="console__footer">
+      <a href="https://github.com/" target="_blank" rel="noopener noreferrer" id="repo-link">código-fonte</a>
+    </footer>
+  </main>
+
+  <div class="overlay" id="overlay">
+    <div class="overlay__panel">
+      <p class="overlay__message" id="overlay-message">FIM DE JOGO</p>
+      <p class="overlay__detail" id="overlay-detail"></p>
+      <button class="overlay__btn" id="overlay-btn">jogar novamente</button>
+    </div>
+  </div>
+
+  <div class="modal" id="manual-modal" aria-hidden="true">
+    <div class="modal__panel">
+      <div class="modal__header">
+        <h2 class="modal__title">manual de instruções</h2>
+        <button class="modal__close" id="manual-close" aria-label="fechar manual">✕</button>
+      </div>
+      <div class="modal__body">
+        <h3>objetivo</h3>
+        <p>
+          Guie a cobra pelo tabuleiro para comer os alvos (◆) que aparecem.
+          A cada alvo comido, a cobra cresce e sua pontuação aumenta.
+        </p>
+
+        <h3>controles</h3>
+        <ul class="manual-list">
+          <li><strong>setas do teclado</strong> ou <strong>W A S D</strong> — muda a direção</li>
+          <li><strong>espaço</strong> ou botão central — pausa e retoma o jogo</li>
+          <li><strong>botões na tela</strong> — disponíveis para jogar pelo toque, em celulares</li>
+          <li><strong>deslizar o dedo</strong> sobre o tabuleiro também muda a direção, em telas de toque</li>
+        </ul>
+
+        <h3>regras</h3>
+        <ul class="manual-list">
+          <li>O jogo termina se a cobra colidir com uma parede.</li>
+          <li>O jogo termina se a cobra colidir com o próprio corpo.</li>
+          <li>Não é possível inverter a direção instantaneamente (ex: ir para a esquerda enquanto se move para a direita).</li>
+          <li>A velocidade pode ser ajustada antes ou durante o jogo: lenta, normal ou rápida.</li>
+          <li>Seu recorde é salvo automaticamente no navegador e fica guardado entre as partidas.</li>
+        </ul>
+
+        <h3>dica</h3>
+        <p>
+          Planeje os movimentos com antecedência — quanto mais a cobra cresce,
+          menos espaço livre sobra no tabuleiro.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

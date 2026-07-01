@@ -1,0 +1,536 @@
+/* ===========================================================
+   Snake — tema "terminal de detecção"
+   Mesma paleta do Campo Minado: fundo quase-preto, fósforo
+   verde, âmbar de alerta, vermelho de perigo. Tipografia
+   monoespaçada (estética CRT).
+   =========================================================== */
+
+:root {
+  --bg-void: #0a0d0a;
+  --bg-panel: #10140f;
+  --bg-cell: #182018;
+  --bg-cell-hover: #1f2a1f;
+  --bg-cell-revealed: #0d110c;
+
+  --phosphor: #5fff8f;
+  --phosphor-dim: #2a9956;
+  --phosphor-bright: #aaffc4;
+
+  --amber: #ffb238;
+  --danger: #ff4d4d;
+  --danger-bright: #ff8080;
+
+  --line: #2a3a2a;
+  --line-bright: #3f5a3f;
+
+  --font-mono: "Courier New", "JetBrains Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg-void);
+  font-family: var(--font-mono);
+  color: var(--phosphor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* leve textura de CRT, sutil, não deve distrair */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(95, 255, 143, 0.025) 0px,
+    rgba(95, 255, 143, 0.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  z-index: 50;
+}
+
+.console {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 24px;
+  box-shadow:
+    0 0 0 1px rgba(95, 255, 143, 0.05),
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    inset 0 0 80px rgba(95, 255, 143, 0.02);
+}
+
+/* ---------- header ---------- */
+
+.console__header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.console__title {
+  font-size: clamp(20px, 5vw, 26px);
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--phosphor-bright);
+  text-shadow: 0 0 12px rgba(95, 255, 143, 0.5);
+}
+
+.console__bracket {
+  color: var(--phosphor-dim);
+}
+
+.console__subtitle {
+  margin-top: 6px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--phosphor-dim);
+  text-transform: uppercase;
+}
+
+.console__actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--phosphor-dim);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.action-btn:hover {
+  border-color: var(--phosphor-dim);
+  color: var(--phosphor);
+}
+
+.action-btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 9px;
+}
+
+/* ---------- HUD ---------- */
+
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-cell-revealed);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.hud__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 64px;
+}
+
+.hud__label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--phosphor-dim);
+}
+
+.hud__value {
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--amber);
+  text-shadow: 0 0 8px rgba(255, 178, 56, 0.4);
+}
+
+.hud__face {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-cell);
+  border: 1px solid var(--line-bright);
+  color: var(--phosphor);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease, border-color 0.15s ease;
+}
+
+.hud__face:hover {
+  border-color: var(--phosphor);
+  transform: scale(1.05);
+}
+
+.hud__face:active {
+  transform: scale(0.95);
+}
+
+/* ---------- velocidade ---------- */
+
+.speed {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.speed__btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--phosphor-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 0;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.speed__btn:hover {
+  border-color: var(--phosphor-dim);
+  color: var(--phosphor);
+}
+
+.speed__btn.is-active {
+  background: rgba(95, 255, 143, 0.08);
+  border-color: var(--phosphor);
+  color: var(--phosphor-bright);
+}
+
+/* ---------- tabuleiro ---------- */
+
+.board-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+#board {
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 1 / 1;
+  background: var(--bg-void);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  touch-action: none;
+}
+
+/* ---------- status line ---------- */
+
+.status-line {
+  text-align: center;
+  font-size: 11px;
+  color: var(--phosphor-dim);
+  letter-spacing: 0.5px;
+  margin-bottom: 18px;
+  min-height: 14px;
+}
+
+/* ---------- d-pad (controles em tela) ---------- */
+
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 44px);
+  grid-template-rows: repeat(2, 44px);
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.dpad__btn {
+  background: var(--bg-cell);
+  border: 1px solid var(--line-bright);
+  color: var(--phosphor);
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+}
+
+.dpad__btn:hover {
+  border-color: var(--phosphor);
+  background: var(--bg-cell-hover);
+}
+
+.dpad__btn:active {
+  transform: scale(0.92);
+  background: rgba(95, 255, 143, 0.12);
+}
+
+.dpad__btn--up { grid-column: 2; grid-row: 1; }
+.dpad__btn--left { grid-column: 1; grid-row: 2; }
+.dpad__btn--down { grid-column: 2; grid-row: 2; }
+.dpad__btn--right { grid-column: 3; grid-row: 2; }
+
+/* ---------- footer ---------- */
+
+.console__footer {
+  text-align: center;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+
+.console__footer a {
+  color: var(--phosphor-dim);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+
+.console__footer a:hover {
+  color: var(--phosphor);
+}
+
+/* ---------- overlay de fim de jogo ---------- */
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 13, 10, 0.85);
+  backdrop-filter: blur(2px);
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fade-in 0.2s ease;
+}
+
+.overlay.is-visible {
+  display: flex;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.overlay__panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--line-bright);
+  border-radius: 4px;
+  padding: 32px 40px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+.overlay__message {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+}
+
+.overlay__message.is-win {
+  color: var(--phosphor-bright);
+  text-shadow: 0 0 12px rgba(95, 255, 143, 0.5);
+}
+
+.overlay__message.is-lose {
+  color: var(--danger-bright);
+  text-shadow: 0 0 12px rgba(255, 77, 77, 0.5);
+}
+
+.overlay__detail {
+  font-size: 12px;
+  color: var(--phosphor-dim);
+  margin-bottom: 20px;
+}
+
+.overlay__btn {
+  background: transparent;
+  border: 1px solid var(--phosphor);
+  color: var(--phosphor-bright);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.overlay__btn:hover {
+  background: rgba(95, 255, 143, 0.1);
+}
+
+/* ---------- modal (manual) ---------- */
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 13, 10, 0.85);
+  backdrop-filter: blur(2px);
+  align-items: center;
+  justify-content: center;
+  z-index: 110;
+  padding: 24px 16px;
+  animation: fade-in 0.2s ease;
+}
+
+.modal.is-visible {
+  display: flex;
+}
+
+.modal__panel {
+  width: 100%;
+  max-width: 440px;
+  max-height: 84vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-panel);
+  border: 1px solid var(--line-bright);
+  border-radius: 4px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.modal__title {
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--phosphor-bright);
+  text-shadow: 0 0 10px rgba(95, 255, 143, 0.4);
+}
+
+.modal__close {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--phosphor-dim);
+  width: 28px;
+  height: 28px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.15s ease;
+}
+
+.modal__close:hover {
+  border-color: var(--phosphor);
+  color: var(--phosphor);
+}
+
+.modal__body {
+  padding: 18px 20px 22px;
+  overflow-y: auto;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--phosphor);
+}
+
+.modal__body h3 {
+  margin-top: 16px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.modal__body h3:first-child {
+  margin-top: 0;
+}
+
+.modal__body p {
+  color: var(--phosphor-dim);
+}
+
+.modal__body strong {
+  color: var(--phosphor-bright);
+}
+
+.manual-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--phosphor-dim);
+}
+
+.manual-list li::before {
+  content: "›";
+  color: var(--phosphor-dim);
+  margin-right: 6px;
+}
+
+/* ---------- responsivo ---------- */
+
+@media (max-width: 420px) {
+  .console {
+    padding: 16px;
+  }
+}
+
+/* respeita preferência de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .modal {
+    animation: none;
+  }
+
+  * {
+    transition: none !important;
+  }
+}
+
+/* foco visível para navegação por teclado */
+.speed__btn:focus-visible,
+.hud__face:focus-visible,
+.overlay__btn:focus-visible,
+.action-btn:focus-visible,
+.modal__close:focus-visible,
+.dpad__btn:focus-visible,
+#board:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
