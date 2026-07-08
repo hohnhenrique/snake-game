@@ -1,25 +1,27 @@
-# Snake — cobra de terminal
+# Snake  terminal snake game
 
-Implementação do clássico Snake em **JavaScript puro**, renderizado em `<canvas>`, sem frameworks ou dependências externas. Tema visual inspirado em terminais de detecção retrô — o mesmo estilo usado no projeto Campo Minado.
+https://hohnhenrique.github.io/snake-game/
 
-## Funcionalidades
+Implementation of the classic Snake in **vanilla JavaScript**, rendered on `<canvas>`, with no frameworks or external dependencies. Visual theme inspired by retro detection terminals — the same style used in the Minesweeper project.
 
-- Três velocidades: lenta, normal e rápida (ajustáveis a qualquer momento)
-- Controles por teclado (setas ou WASD), por toque (botões em tela) ou por gesto de deslizar no tabuleiro
-- Pausa e retomada (botão central ou tecla espaço)
-- Recorde (high score) salvo automaticamente no `localStorage` do navegador
-- Manual de instruções com objetivo, controles e regras
-- Responsivo, com suporte a `prefers-reduced-motion`
+## Features
 
-## Tecnologias
+- Three speeds: slow, normal and fast (adjustable at any time)
+- Keyboard controls (arrow keys or WASD), touch controls (on-screen buttons) or swipe gesture on the board
+- Pause and resume (center button or spacebar)
+- High score automatically saved in the browser's `localStorage`
+- Instructions manual with objective, controls and rules
+- Responsive, with `prefers-reduced-motion` support
+
+## Technologies
 
 - HTML5 (`<canvas>`)
-- CSS3 (variáveis CSS, grid layout)
-- JavaScript (ES6+, sem bibliotecas)
+- CSS3 (CSS variables, grid layout)
+- JavaScript (ES6+, no libraries)
 
-## Como rodar localmente
+## How to run locally
 
-Não há etapa de build. Basta abrir o arquivo `index.html` no navegador, ou rodar um servidor local simples:
+There is no build step. Just open the `index.html` file in the browser, or run a simple local server:
 
 ```bash
 # Python
@@ -29,36 +31,36 @@ python3 -m http.server 8000
 npx serve .
 ```
 
-Depois acesse `http://localhost:8000`.
+Then access `http://localhost:8000`.
 
-## Estrutura do projeto
+## Project structure
 
 ```
 snake/
-├── index.html      # estrutura da página
-├── style.css        # estilos e tema visual
-├── script.js         # lógica do jogo
+├── index.html      # page structure
+├── style.css        # styles and visual theme
+├── script.js         # game logic
 └── README.md
 ```
 
-## Lógica do jogo
+## Game logic
 
-A lógica principal está em `script.js` e cobre:
+The core logic is in `script.js` and covers:
 
-- **Loop de jogo**: `setInterval` cuja velocidade depende da opção selecionada (lenta/normal/rápida)
-- **Movimento**: a direção pendente só é aplicada no próximo "tick", evitando reversões instantâneas que causariam colisão imediata com o próprio corpo
-- **Colisões**: com as paredes do tabuleiro e com o próprio corpo da cobra
-- **Comida**: posicionada aleatoriamente em uma célula livre a cada vez que é comida
-- **Recorde**: comparado e salvo no `localStorage` sempre que uma partida termina com pontuação maior que a anterior
+- **Game loop**: `setInterval` whose speed depends on the selected option (slow/normal/fast)
+- **Movement**: the pending direction is only applied on the next "tick", avoiding instant reversals that would cause immediate collision with the snake's own body
+- **Collisions**: with the board walls and with the snake's own body
+- **Food**: randomly placed on a free cell each time it is eaten
+- **High score**: compared and saved in `localStorage` whenever a match ends with a score higher than the previous one
 
-## Possíveis melhorias futuras
+## Possible future improvements
 
-- Obstáculos no tabuleiro
-- Modo "sem paredes" (a cobra atravessa para o lado oposto)
-- Histórico de partidas e estatísticas, como no Campo Minado
-- Efeitos sonoros retrô
+- Obstacles on the board
+- "No walls" mode (the snake wraps around to the opposite side)
+- Match history and statistics, like in Minesweeper
+- Retro sound effects
 
-## Licença
+## License
 
-Livre para uso e modificação.
+Free to use and modify.
 # snake-game
