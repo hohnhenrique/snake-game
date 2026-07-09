@@ -16,13 +16,20 @@
         SNAKE
         <span class="console__bracket">]</span>
       </div>
-      <p class="console__subtitle">cobra de terminal // v1.0</p>
+      <p class="console__subtitle">cobra de terminal // v2.0</p>
       <div class="console__actions">
         <button class="action-btn" id="manual-btn" type="button">
           <span class="action-btn__icon">?</span> manual
         </button>
       </div>
     </header>
+
+    <!-- jogador ativo -->
+    <div class="player-bar">
+      <span class="player-bar__label">jogador:</span>
+      <span class="player-bar__name" id="player-name">—</span>
+      <button class="player-bar__change" id="change-player-btn" title="trocar jogador">trocar</button>
+    </div>
 
     <section class="hud" aria-label="painel de status">
       <div class="hud__stat">
@@ -50,28 +57,70 @@
       <canvas id="board" width="360" height="360" aria-label="tabuleiro do jogo snake"></canvas>
     </section>
 
-    <p class="status-line" id="status-line">use as setas ou WASD para mover &middot; espaço para pausar</p>
+    <p class="status-line" id="status-line">pressione uma direção para começar</p>
 
     <div class="dpad" aria-hidden="true">
-      <button class="dpad__btn dpad__btn--up" id="dpad-up" aria-label="mover para cima">▲</button>
-      <button class="dpad__btn dpad__btn--left" id="dpad-left" aria-label="mover para esquerda">◀</button>
-      <button class="dpad__btn dpad__btn--down" id="dpad-down" aria-label="mover para baixo">▼</button>
+      <button class="dpad__btn dpad__btn--up"    id="dpad-up"    aria-label="mover para cima">▲</button>
+      <button class="dpad__btn dpad__btn--left"  id="dpad-left"  aria-label="mover para esquerda">◀</button>
+      <button class="dpad__btn dpad__btn--down"  id="dpad-down"  aria-label="mover para baixo">▼</button>
       <button class="dpad__btn dpad__btn--right" id="dpad-right" aria-label="mover para direita">▶</button>
     </div>
+
+    <!-- ranking toggle -->
+    <div class="stats-toggle-row">
+      <button class="stats-toggle-btn" id="stats-toggle-btn">▸ ranking</button>
+    </div>
+
+    <!-- painel de ranking -->
+    <section class="stats-panel" id="stats-panel" hidden>
+      <div class="stats-panel__header">
+        <div class="stats-panel__tabs">
+          <button class="stats-tab is-active" data-speed="slow">lenta</button>
+          <button class="stats-tab" data-speed="normal">normal</button>
+          <button class="stats-tab" data-speed="fast">rápida</button>
+        </div>
+        <button class="stats-refresh-btn" id="stats-refresh-btn" title="recarregar ranking" aria-label="recarregar ranking">↻</button>
+      </div>
+      <div class="stats-panel__content" id="stats-content"></div>
+    </section>
 
     <footer class="console__footer">
       <a href="https://github.com/" target="_blank" rel="noopener noreferrer" id="repo-link">código-fonte</a>
     </footer>
   </main>
 
+  <!-- overlay: fim de jogo -->
   <div class="overlay" id="overlay">
     <div class="overlay__panel">
       <p class="overlay__message" id="overlay-message">FIM DE JOGO</p>
       <p class="overlay__detail" id="overlay-detail"></p>
+      <div class="win-record" id="win-record"></div>
       <button class="overlay__btn" id="overlay-btn">jogar novamente</button>
     </div>
   </div>
 
+  <!-- modal: identificação do jogador -->
+  <div class="overlay" id="player-overlay">
+    <div class="overlay__panel">
+      <p class="overlay__message">IDENTIFICAÇÃO</p>
+      <p class="overlay__detail">informe seu nome para começar</p>
+      <div class="overlay__input-group">
+        <input
+          class="overlay__input"
+          id="player-input"
+          type="text"
+          maxlength="20"
+          placeholder="seu nome..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <p class="overlay__input-error" id="player-input-error"></p>
+      </div>
+      <button class="overlay__btn" id="player-confirm-btn">confirmar</button>
+    </div>
+  </div>
+
+  <!-- modal: manual -->
   <div class="modal" id="manual-modal" aria-hidden="true">
     <div class="modal__panel">
       <div class="modal__header">
@@ -97,16 +146,13 @@
         <ul class="manual-list">
           <li>O jogo termina se a cobra colidir com uma parede.</li>
           <li>O jogo termina se a cobra colidir com o próprio corpo.</li>
-          <li>Não é possível inverter a direção instantaneamente (ex: ir para a esquerda enquanto se move para a direita).</li>
-          <li>A velocidade pode ser ajustada antes ou durante o jogo: lenta, normal ou rápida.</li>
-          <li>Seu recorde é salvo automaticamente no navegador e fica guardado entre as partidas.</li>
+          <li>Não é possível inverter a direção instantaneamente.</li>
+          <li>A velocidade pode ser ajustada antes ou durante o jogo.</li>
+          <li>O ranking é compartilhado entre todos os jogadores.</li>
         </ul>
 
-        <h3>dica</h3>
-        <p>
-          Planeje os movimentos com antecedência — quanto mais a cobra cresce,
-          menos espaço livre sobra no tabuleiro.
-        </p>
+        <h3>pontuação</h3>
+        <p>Cada alvo comido vale <strong>10 pontos</strong>. O ranking é separado por velocidade — competição justa para todos os níveis.</p>
       </div>
     </div>
   </div>

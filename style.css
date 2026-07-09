@@ -534,3 +534,148 @@ body {
   outline: 2px solid var(--phosphor);
   outline-offset: 2px;
 }
+
+/* ===========================================================
+   Snake v2 — adições para ranking e player bar
+   =========================================================== */
+
+/* ── player bar ── */
+.player-bar {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg-cell-revealed, #0d110c);
+  border: 1px solid var(--line, #2a3a2a); border-radius: 3px;
+  padding: 7px 10px; margin-bottom: 12px;
+  font-size: clamp(10px, 3vw, 12px);
+  font-family: var(--font-mono, "Courier New", monospace);
+}
+.player-bar__label { color: var(--phosphor-dim, #2a9956); letter-spacing: 1px; white-space: nowrap; }
+.player-bar__name  {
+  flex: 1; color: var(--phosphor-bright, #aaffc4);
+  font-weight: 700; letter-spacing: 1px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.player-bar__change {
+  background: transparent; border: 1px solid var(--line-bright, #3f5a3f);
+  color: var(--phosphor-dim, #2a9956);
+  font-family: var(--font-mono, "Courier New", monospace);
+  font-size: clamp(9px, 2.5vw, 10px); letter-spacing: 1px; text-transform: uppercase;
+  padding: 4px 8px; border-radius: 3px; cursor: pointer;
+  transition: all .15s ease; white-space: nowrap; min-height: 32px;
+  display: flex; align-items: center;
+}
+.player-bar__change:hover { border-color: var(--phosphor-dim, #2a9956); color: var(--phosphor, #5fff8f); }
+
+/* ── ranking toggle ── */
+.stats-toggle-row { text-align: center; margin: 10px 0; }
+.stats-toggle-btn {
+  background: transparent; border: none;
+  color: var(--phosphor-dim, #2a9956);
+  font-family: var(--font-mono, "Courier New", monospace);
+  font-size: clamp(10px, 2.5vw, 11px); letter-spacing: 1px; text-transform: uppercase;
+  cursor: pointer; padding: 6px 10px; transition: color .15s ease;
+  min-height: 36px; touch-action: manipulation;
+}
+.stats-toggle-btn:hover { color: var(--phosphor, #5fff8f); }
+
+/* ── painel de ranking ── */
+.stats-panel {
+  border: 1px solid var(--line, #2a3a2a); border-radius: 3px;
+  background: #0d110c; padding: 10px; margin-bottom: 14px;
+}
+.stats-panel__header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.stats-panel__tabs   { display: flex; gap: 6px; flex: 1; }
+
+.stats-tab {
+  flex: 1; background: transparent;
+  border: 1px solid var(--line, #2a3a2a);
+  color: var(--phosphor-dim, #2a9956);
+  font-family: var(--font-mono, "Courier New", monospace);
+  font-size: clamp(9px, 2.5vw, 10px); letter-spacing: 1px; text-transform: uppercase;
+  padding: 6px 0; border-radius: 3px; cursor: pointer;
+  transition: all .15s ease; min-height: 34px; touch-action: manipulation;
+}
+.stats-tab:hover { border-color: var(--phosphor-dim, #2a9956); color: var(--phosphor, #5fff8f); }
+.stats-tab.is-active {
+  background: rgba(95,255,143,.08);
+  border-color: var(--phosphor, #5fff8f); color: var(--phosphor-bright, #aaffc4);
+}
+
+.stats-refresh-btn {
+  width: 34px; height: 34px; flex-shrink: 0;
+  background: transparent; border: 1px solid var(--line-bright, #3f5a3f);
+  color: var(--phosphor-dim, #2a9956);
+  font-family: var(--font-mono, "Courier New", monospace);
+  font-size: 16px; border-radius: 3px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s ease; touch-action: manipulation;
+}
+.stats-refresh-btn:hover { border-color: var(--phosphor, #5fff8f); color: var(--phosphor, #5fff8f); }
+.stats-refresh-btn.is-spinning { animation: spin .6s linear; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.stats-panel__content { min-height: 60px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+.stats-empty {
+  text-align: center; color: var(--phosphor-dim, #2a9956);
+  font-size: 11px; padding: 16px 0; letter-spacing: 1px;
+  font-family: var(--font-mono, "Courier New", monospace);
+}
+
+.ranking-table {
+  width: 100%; border-collapse: collapse;
+  font-size: clamp(9px, 2.5vw, 11px); min-width: 260px;
+  font-family: var(--font-mono, "Courier New", monospace);
+}
+.ranking-table th {
+  color: var(--phosphor-dim, #2a9956); text-transform: uppercase;
+  letter-spacing: 1px; font-weight: 400;
+  padding: 4px 5px; border-bottom: 1px solid var(--line, #2a3a2a);
+  text-align: left; white-space: nowrap;
+}
+.ranking-table th:nth-child(1) { width: 24px; text-align: center; }
+.ranking-table th:nth-child(3) { text-align: right; }
+.ranking-table th:nth-child(4) { text-align: right; }
+
+.ranking-table td {
+  padding: 5px 5px; border-bottom: 1px solid var(--line, #2a3a2a);
+  color: var(--phosphor, #5fff8f); white-space: nowrap;
+}
+.ranking-table td:nth-child(1) { text-align: center; color: var(--phosphor-dim, #2a9956); }
+.ranking-table td:nth-child(3) { text-align: right; font-variant-numeric: tabular-nums; }
+.ranking-table td:nth-child(4) { text-align: right; }
+
+.ranking-table tr:nth-child(1) td { color: #ffd700; }
+.ranking-table tr:nth-child(2) td { color: #c0c0c0; }
+.ranking-table tr:nth-child(3) td { color: #cd7f32; }
+.ranking-table tr.is-current td  { background: rgba(95,255,143,.06); }
+
+/* ── overlay de jogador ── */
+.overlay__input-group { margin-bottom: 14px; }
+.overlay__input {
+  width: 100%; background: #182018;
+  border: 1px solid var(--line-bright, #3f5a3f); border-radius: 3px;
+  color: var(--phosphor-bright, #aaffc4);
+  font-family: var(--font-mono, "Courier New", monospace);
+  font-size: max(16px, 1em); letter-spacing: 2px;
+  padding: 10px 12px; text-align: center;
+  outline: none; transition: border-color .15s ease;
+}
+.overlay__input:focus { border-color: var(--phosphor, #5fff8f); }
+.overlay__input::placeholder { color: var(--phosphor-dim, #2a9956); opacity: .5; }
+.overlay__input-error {
+  font-size: 10px; color: #ff4d4d; letter-spacing: 1px;
+  margin-top: 6px; min-height: 14px;
+  font-family: var(--font-mono, "Courier New", monospace);
+}
+
+/* ── resultado fim de jogo ── */
+.win-record {
+  background: #182018; border: 1px solid var(--line, #2a3a2a);
+  border-radius: 3px; padding: 10px 12px; margin-bottom: 14px;
+  font-size: clamp(10px, 2.8vw, 11px); text-align: left;
+  font-family: var(--font-mono, "Courier New", monospace);
+}
+.win-record p { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; }
+.win-record p span:first-child { color: var(--phosphor-dim, #2a9956); white-space: nowrap; }
+.win-record p span:last-child  { color: var(--phosphor-bright, #aaffc4); font-variant-numeric: tabular-nums; text-align: right; }
+.win-record .is-record { color: #ffd700; text-shadow: 0 0 8px rgba(255,215,0,.4); }
