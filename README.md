@@ -1,7 +1,7 @@
 # Snake  terminal snake game
 
 
-🎮 [Play online](https://hohnhenrique.github.io/snake-game) — *replace with your GitHub Pages link after deploy*
+🎮 [Play online](https://hohnhenrique.github.io/snake-game)
 
 Implementation of the classic Snake in **vanilla JavaScript**, rendered on `<canvas>`, with no frameworks or external dependencies. Visual theme inspired by retro detection terminals — the same style used in the Minesweeper project.
 
